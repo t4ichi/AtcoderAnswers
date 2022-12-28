@@ -1,36 +1,43 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
+using ll = long long;
 
-void dfs(int v, vector<vector<int>> &G, vector<int> &color, int &ans) {
-    for(auto v2 : G[v]) {
-        if(color[v2] != -1) {
-            if(color[v2] == color[v]) {
-                // ans++;
-            }
-            continue;
+vector<int> cnt(2);
+bool dfs(int v,vector<int> &color,vector<vector<int>> &g,int nc = 0){
+    if(color[v] != -1) return color[v] == nc;
+    color[v] = nc;
+    cnt[nc]++;
+    for(int v2 : g[v]){
+        if(!dfs(v2,color,g,!nc)){
+            return false;
         }
-        color[v2] = 1 - color[v];
-        dfs(v2, G, color, ans);
     }
+    return true;
 }
 
 int main(){
-    int n,m;
+    ll n,m;
     cin >> n >> m;
-    vector<vector<int>> G(n);
+    vector<vector<int>> g(n);
     for(int i = 0;i < m;i++){
-        int u,v;
-        cin >> u >> v;
-        u--;v--;
-        G[u].push_back(v);
-        G[v].push_back(u);
+        int a,b;
+        cin >> a >> b;
+        a--;b--;
+        g[a].push_back(b);
+        g[b].push_back(a);
     }
-    vector<int> color(n, -1);
-    int ans = 0;
-    for(int v = 0; v < n; ++v) {
-        if(color[v] != -1) continue;
-        color[v] = 0;
-        dfs(v, G, color, ans);
+    ll ans = n * (n-1) / 2 - m;
+    vector<int> color(n,-1);
+    for(int i = 0;i < n;i++){
+        if(color[i] != -1) continue;
+        cnt = vector<int>(2);
+        if(!dfs(i,color,g)){
+            cout << 0 << "\n";
+            return 0;
+        }
+        for(int j : cnt){
+            ans -= (ll)j * (j-1) / 2;
+        }
     }
-    cout << ans << endl;
+    cout << ans << "\n";
 }
