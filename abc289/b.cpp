@@ -1,4 +1,4 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
 struct UnionFind {
@@ -34,29 +34,29 @@ struct UnionFind {
         return siz[root(x)];
     }
 };
-int main() {
-    int n;
-    cin >> n;
 
-    UnionFind uf(2*1e5);
-    vector<string> s(n),t(n);
-
-    map<string,int> mp;
-
-    string ans = "Yes";
-    for(int i = 0;i < n;i++){
-        cin >> s[i] >> t[i];
-        if(!mp.count(s[i])){
-            mp.emplace(s[i],mp.size());
-        }
-        if(!mp.count(t[i])){
-            mp.emplace(t[i],mp.size());
-        }
-        if(uf.issame(mp[s[i]],mp[t[i]])){
-            cout << "No" << "\n";
-            return 0;
-        }
-        uf.unite(mp[s[i]],mp[t[i]]);
+int main(){
+    int n,m;
+    cin >> n >> m;
+    UnionFind uf(n);
+    for(int i = 0;i < m;i++){
+        int a;
+        cin >> a;
+        a--;
+        uf.unite(a,a+1);
     }
-    cout << ans << "\n";
+
+    vector<vector<int>> ans(n);
+
+    for(int i = 0;i < n;i++){
+        ans[uf.root(i)].push_back(i);
+    }
+
+    for(int i = 0;i < n;i++){
+        reverse(ans[i].begin(),ans[i].end());
+        for(int j : ans[i]){
+            cout << j+1 << " ";
+        }
+    }
+    cout << "\n";
 }
